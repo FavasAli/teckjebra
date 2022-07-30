@@ -1,9 +1,9 @@
-import React, {useEffect,useState}from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ProductsScreen = () => {
-
-    const [product,setproduct]=useState([])
+  const [product, setproduct] = useState([]);
   const userInfoFromLocalStarage = localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : [];
@@ -19,18 +19,16 @@ const ProductsScreen = () => {
         config
       );
       console.log("data.v", data.products);
-      setproduct(data.products)
+      setproduct(data.products);
     } catch (error) {}
   };
 
   useEffect(() => {
-    console.log(
-      "userInfoFromLocalStarage",
-      userInfoFromLocalStarage.token
-    );
+    console.log("userInfoFromLocalStarage", userInfoFromLocalStarage.token);
     fetchData();
   }, []);
-  return <div>
+  return (
+    <div>
       <table className="boarder border-1p" striped bordered hover>
         <thead>
           <tr>
@@ -41,21 +39,22 @@ const ProductsScreen = () => {
             <th>category</th>
           </tr>
         </thead>
-        
-{product && product.map(item=>
-   <tbody>
-     <td>{item.id}</td>
-     <td>{item.title}</td>
-     <td>{item.brand}</td>
-     <td>{item.price}</td>
-     <td>{item.category}</td>
 
-         
-   </tbody>
-)}
-        
+        {product &&
+          product.map((item) => (
+            <tbody>
+              <td>{item.id}</td>
+              <Link to={`/product/${item.id}`}>
+                <td>{item.title}</td>
+              </Link>
+              <td>{item.brand}</td>
+              <td>{item.price}</td>
+              <td>{item.category}</td>
+            </tbody>
+          ))}
       </table>
-  </div>;
+    </div>
+  );
 };
 
 export default ProductsScreen;
