@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LoginScreen from './screens/LoginScreen'
+import ProductsScreen from './screens/ProductsScreen'
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Routes>
 
           <Route path='/Login' element={<LoginScreen />}></Route>
+          <Route path='/' element={<ProductsScreen />}></Route>
           
 
         </Routes>
