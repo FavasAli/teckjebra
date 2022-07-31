@@ -6,10 +6,12 @@ const ProductsScreen = () => {
   const [filter, setFilter] = useState("");
 
   const [product, setproduct] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const userInfoFromLocalStarage = localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : [];
+
   const fetchData = async () => {
     try {
       const config = {
@@ -26,10 +28,32 @@ const ProductsScreen = () => {
     } catch (error) {}
   };
 
+  const fetchCategory = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `${userInfoFromLocalStarage.token}`,
+        },
+      };
+      const { data } = await axios.get(
+        `https://dummyjson.com/products/categories`,
+        config
+      );
+      console.log("data. sscateov", data);
+      setCategories(data);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     console.log("userInfoFromLocalStarage", userInfoFromLocalStarage.token);
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log("userInfoFromLocalStarage", userInfoFromLocalStarage.token);
+    fetchCategory();
+  }, []);
+
   return (
     <div>
       <input
@@ -38,6 +62,16 @@ const ProductsScreen = () => {
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
       ></input>
+      <br />
+      <label>Choose a </label>
+      <select value={categories}>
+        {categories &&
+          categories.map((item) => (
+            <>
+              <option>{item}</option>
+            </>
+          ))}
+      </select>
 
       <table className="boarder border-1p" striped bordered hover>
         <thead>
@@ -51,15 +85,15 @@ const ProductsScreen = () => {
         </thead>
         {product
           ? product
-          .filter((item) => {
-            if (filter === "") {
-              return item;
-            } else if (
-              item.name.toLowerCase().includes(filter.toLowerCase())
-            ) {
-              return item;
-            }
-          })
+              .filter((item) => {
+                if (filter === "") {
+                  return item;
+                } else if (
+                  item.name.toLowerCase().includes(filter.toLowerCase())
+                ) {
+                  return item;
+                }
+              })
 
               .map((item) => (
                 <tbody>
