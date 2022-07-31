@@ -3,7 +3,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const ProductsScreen = () => {
+  const [filter, setFilter] = useState("");
+
   const [product, setproduct] = useState([]);
+
   const userInfoFromLocalStarage = localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : [];
@@ -29,6 +32,13 @@ const ProductsScreen = () => {
   }, []);
   return (
     <div>
+      <input
+        type="text"
+        placeholder="Enter a name"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+      ></input>
+
       <table className="boarder border-1p" striped bordered hover>
         <thead>
           <tr>
@@ -39,19 +49,30 @@ const ProductsScreen = () => {
             <th>category</th>
           </tr>
         </thead>
+        {product
+          ? product
+          .filter((item) => {
+            if (filter === "") {
+              return item;
+            } else if (
+              item.name.toLowerCase().includes(filter.toLowerCase())
+            ) {
+              return item;
+            }
+          })
 
-        {product &&
-          product.map((item) => (
-            <tbody>
-              <td>{item.id}</td>
-              <Link to={`/product/${item.id}`}>
-                <td>{item.title}</td>
-              </Link>
-              <td>{item.brand}</td>
-              <td>{item.price}</td>
-              <td>{item.category}</td>
-            </tbody>
-          ))}
+              .map((item) => (
+                <tbody>
+                  <td>{item.id}</td>
+                  <Link to={`/product/${item.id}`}>
+                    <td>{item.title}</td>
+                  </Link>
+                  <td>{item.brand}</td>
+                  <td>{item.price}</td>
+                  <td>{item.category}</td>
+                </tbody>
+              ))
+          : "no data"}
       </table>
     </div>
   );
